@@ -1,0 +1,13 @@
+node_modules/
+out/
+dist/
+*.log
+.tmp-*
+
+# verification artifacts
+scripts/.shots/
+scripts/.profiles-build/
+scripts/.sftp-build/
+
+*.tsbuildinfo
+

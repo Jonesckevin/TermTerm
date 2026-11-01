@@ -1,0 +1,117 @@
+{
+  "name": "termterm",
+  "version": "0.2.0",
+  "description": "Node-based multi-shell terminal canvas with encrypted saved SSH, Telnet and RDP connections",
+  "main": "./out/main/index.js",
+  "author": "TermTerm",
+  "license": "MIT",
+  "private": true,
+  "desktopName": "TermTerm.desktop",
+  "scripts": {
+    "postinstall": "node scripts/postinstall.cjs",
+    "dev": "electron-vite dev",
+    "start": "electron-vite preview",
+    "build": "electron-vite build",
+    "clean": "node scripts/clean.cjs",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "verify": "electron-vite build && node scripts/verify-e2e.cjs",
+    "dist": "npm run clean && electron-vite build && electron-builder",
+    "dist:win": "npm run clean && electron-vite build && electron-builder --win",
+    "dist:portable": "npm run clean && electron-vite build && electron-builder --win portable",
+    "dist:installer": "npm run clean && electron-vite build && electron-builder --win nsis",
+    "dist:linux": "npm run clean && electron-vite build && electron-builder --linux",
+    "dist:docker": "docker compose run --rm --build package",
+    "verify:features": "electron-vite build && node scripts/verify-features.cjs",
+    "verify:profiles": "node scripts/verify-profiles.cjs",
+    "host": "node scripts/session-host.cjs",
+    "serve": "node scripts/self-host-server.cjs",
+    "verify:sftp": "electron-vite build && node scripts/verify-sftp.cjs",
+    "verify:sftp:unit": "node scripts/verify-sftp.cjs --unit",
+    "fixture:ssh": "node scripts/sshd-fixture.cjs start",
+    "fixture:ssh:stop": "node scripts/sshd-fixture.cjs stop"
+  },
+  "build": {
+    "appId": "dev.termterm.app",
+    "productName": "TermTerm",
+    "npmRebuild": false,
+    "icon": "build/icon.ico",
+    "files": [
+      "out/**/*",
+      "build/icon.png",
+      "scripts/session-host.cjs",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/node_modules/node-pty/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "TermTerm-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "TermTerm-${version}-setup.exe"
+    },
+    "linux": {
+      "icon": "build/icon.png",
+      "category": "Development",
+      "executableName": "termterm",
+      "syncDesktopName": true,
+      "synopsis": "Node-based multi-shell terminal canvas",
+      "description": "TermTerm puts every shell - PowerShell, cmd, WSL distros, SSH hosts - on one pan-and-zoom canvas.",
+      "target": [
+        "AppImage",
+        "tar.gz"
+      ],
+      "artifactName": "TermTerm-${version}-linux-${arch}.${ext}"
+    }
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/addon-search": "^0.16.0",
+    "@xterm/addon-serialize": "^0.14.0",
+    "@xterm/addon-web-links": "^0.12.0",
+    "@xterm/addon-webgl": "^0.19.0",
+    "@xterm/xterm": "^6.0.0",
+    "node-pty": "^1.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "ssh2": "^1.17.0",
+    "zustand": "^5.0.16"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/ssh2": "^1.15.6",
+    "@vitejs/plugin-react": "^6.1.2",
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0",
+    "electron-vite": "^6.0.0",
+    "playwright": "^1.64.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  },
+  "allowScripts": {
+    "node-pty@1.1.0": true,
+    "electron-winstaller@5.4.0": true,
+    "electron@45.2.1": true
+  }
+}

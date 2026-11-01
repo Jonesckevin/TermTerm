@@ -1,0 +1,9 @@
+# Keep the repo LF-normalised so Linux CI scripts behave identically.
+* text=auto eol=lf
+
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.png binary
+*.ico binary

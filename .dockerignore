@@ -1,0 +1,17 @@
+# Dependencies and build output are produced inside the image; copying the host's
+# copies in would leak Windows-built binaries into a Linux build.
+node_modules
+out
+dist
+
+.git
+.github
+.gitignore
+.gitattributes
+
+# Local verification artifacts
+scripts/.shots
+scripts/.profiles-build
+scripts/.sftp-build
+*.log
+.tmp-*

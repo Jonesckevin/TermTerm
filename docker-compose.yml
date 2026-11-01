@@ -1,0 +1,36 @@
+name: termterm
+
+services:
+  # Builds the Linux release artifacts into ./dist.
+  #
+  #   docker compose run --rm --build package
+  #   docker compose run --rm --build package npx electron-builder --linux --dir
+  #
+  # On Linux hosts, export DOCKER_UID/DOCKER_GID (`id -u`/`id -g`) so the files
+  # land in ./dist owned by you instead of root.
+  package:
+    build:
+      context: .
+      target: release
+      args:
+        NODE_VERSION: "24"
+    image: termterm-build:local
+    user: "${DOCKER_UID:-0}:${DOCKER_GID:-0}"
+    environment:
+      # electron-builder keeps its downloaded tools in the user cache.
+      HOME: /home/node
+      XDG_CACHE_HOME: /home/node/.cache
+    volumes:
+      - ./dist:/out
+    # Override `command` to run something else in the prepared image, e.g.
+    #   docker compose run --rm --build package npx electron-builder --linux --dir
+    # (the copy step is then skipped; artifacts stay inside the container).
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        rm -rf /out/*
+        cp -a /app/dist/. /out/
+        echo "Built artifacts:"
+        ls -lh /out
